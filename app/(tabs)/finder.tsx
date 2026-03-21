@@ -1,16 +1,106 @@
 // This is your explore tab
-import { ExternalLink } from '@/components/external-link';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { activeGameCard, gameCard, headerStyles } from '@/constants/Styles';
-import { Fonts, TextStyles } from '@/constants/theme';
+import { TextStyles } from '@/constants/theme';
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { ImageSourcePropType, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 export default function FinderScreen() {
+const router = useRouter();
+
+const leagues = ["NBA", "NFL", "MLB", "NHL", "MLS", "AHL"];
+
+type GameData = {
+  quarter: string;
+  time: string;
+  broadcasts: string;
+  teamOne: {
+    logo: string;
+    name: string;
+    score: string;
+  };
+  teamTwo: {
+    logo: string;
+    name: string;
+    score: string;
+  };
+};
+
+const teamLogos: Record<string, ImageSourcePropType> = {
+  Nuggets: require("@/assets/Logo/Denver_Nuggets.png"),
+  Pacers: require("@/assets/Logo/Indiana_Pacers.png"),
+};
+
+const scores: Record<string, GameData> = {
+  game1: {
+    quarter: "Final",
+    time: "",
+    broadcasts: "NBA League Pass, NBCSB, YES, NBA TV Canada",
+    teamOne: {
+      logo: "Nuggets",
+      name: "Saint Louis",
+      score: "72",
+    },
+    teamTwo: {
+      logo: "Pacers",
+      name: "Michigan",
+      score: "95",
+    }
+  },
+  game2: {
+    quarter: "H1",
+    time: "12:17",
+    broadcasts: "NBA League Pass, NBCSB, YES, NBA TV Canada",
+    teamOne: {
+      logo: "Nuggets",
+      name: "Louisville",
+      score: "12",
+    },
+    teamTwo: {
+      logo: "Pacers",
+      name: "MI State",
+      score: "19",
+    }
+  },
+  game3: {
+    quarter: "Today",
+    time: "2:15PM",
+    broadcasts: "NBA League Pass, NBCSB, YES, NBA TV Canada",
+    teamOne: {
+      logo: "Nuggets",
+      name: "TCU",
+      score: "",
+    },
+    teamTwo: {
+      logo: "Pacers",
+      name: "Duke",
+      score: "",
+    }
+  },
+  game4: {
+    quarter: "Today",
+    time: "3:10PM",
+    broadcasts: "NBA League Pass, NBCSB, YES, NBA TV Canada",
+    teamOne: {
+      logo: "Nuggets",
+      name: "Texas A&M",
+      score: "",
+    },
+    teamTwo: {
+      logo: "Pacers",
+      name: "Houston",
+      score: "",
+    }
+  },
+};
+
+const [currentLeague, setLeague] = useState('NBA')
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -24,150 +114,123 @@ export default function FinderScreen() {
       }
       fixedHeader={
         <ThemedView style={headerStyles.leagueContainer}>
-          <View style={headerStyles.leagueButton}>
-            <Text style={headerStyles.leagueText}>
-              NBA
-            </Text>
+           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={headerStyles.leagueScroll}>
+          {leagues.map((league) => (
+            <Pressable key={league}
+            onPress={() => setLeague(league)}
+          >
+            <View key={league} style={headerStyles.leagueButton}>
+            <ThemedText style={[headerStyles.leagueText, league === currentLeague && headerStyles.leagueTextActive]}>
+              {league}
+            </ThemedText>
           </View>
-          <View style={headerStyles.leagueButton}>
-            <Text style={headerStyles.leagueText}>
-              NFL
-            </Text>
-          </View>
-          <View style={headerStyles.leagueButton}>
-            <Text style={headerStyles.leagueText}>
-              NHL
-            </Text>
-          </View>
-          <View style={headerStyles.leagueButton}>
-            <Text style={headerStyles.leagueText}>
-              MLB
-            </Text>
-          </View>
+          </Pressable>
+          ))}
+          </ScrollView>
         </ThemedView>
       }>
-      <ThemedView style={styles.titleContainer}>
+      <ThemedView style={headerStyles.titleContainer}>
         <ThemedText
           type="title"
           style={TextStyles.day}>
           Today
         </ThemedText>
       </ThemedView>
-        <View style={[activeGameCard(1.00, 0.16, 'column'), {borderWidth: 2,}]}> 
-        {/* MAIN GAME CARD CONTAINER */}
-            <View style={[activeGameCard(1.00, 0.10, 'row'), {borderWidth: 2,}]}>
-            {/* UPPER CONTAINER */}
-                <View style={[activeGameCard(0.80, 0.10, 'column'), {borderWidth: 2, alignItems: 'flex-start',}]}>
-                {/* TEAM AND SCORE CONTAINER */}
-                    <View style={[activeGameCard(0.70, 0.05, 'row'), {borderWidth: 2, justifyContent: 'space-between', padding: 8,}]}>
-                    {/* TEAM ONE CONTAINER */}
-                        <View style={[activeGameCard(0.45, 0.05, 'row'), {borderWidth: 2, justifyContent: 'flex-start'}]}>
-                        {/* TEAM ONE LOGO AND NAME CONTAINER */}
-                            <Image
-                              source={require('@/assets/Logo/Denver_Nuggets.png')}
-                              style={[gameCard.teamLogo]}
-                            />
-                            <ThemedText
-                              style={gameCard.teamName}>
-                              Nuggets
-                            </ThemedText>
-                        </View>
-                        <View style={[activeGameCard(0.10, 0.05, 'row'), {borderWidth: 2, justifyContent: 'flex-end'}]}>
-                        {/* TEAM TWO SCORE CONTAINER */}
-                          <ThemedText
-                            style={[gameCard.teamName, {marginLeft: 12}]}>
-                            72
-                          </ThemedText>
-                        </View>
-                    </View>
-                    <View style={[activeGameCard(0.70, 0.05, 'row'), {borderWidth: 2, justifyContent: 'space-between', padding: 8,}]}>
-                    {/* TEAM TWO CONTAINER */}
-                        <View style={[activeGameCard(0.45, 0.05, 'row'), {borderWidth: 2, justifyContent: 'flex-start'}]}>
-                        {/* TEAM TWO LOGO AND NAME CONTAINER */}
-                            <Image
-                              source={require('@/assets/Logo/Indiana_Pacers.png')}
-                              style={[gameCard.teamLogo]}
-                            />
-                            <ThemedText
-                              style={gameCard.teamName}>
-                              Timberwolves
-                            </ThemedText>
-                        </View>
-                        <View style={[activeGameCard(0.15, 0.05, 'row'), {borderWidth: 6}]}>
-                        {/* TEAM TWO SCORE CONTAINER */}
-                          <ThemedText
-                            style={[gameCard.teamName, {margin: 0}]}>
-                            64
-                          </ThemedText>
-                        </View>
-                    </View>
-                </View>
-                <View style={[activeGameCard(0.20, 0.10, 'row'), {borderWidth: 2,}]}>
-                {/* QUARTER AND TIMER CONTAINER */}
-                </View>
-            </View>
-            <View style={[activeGameCard(1.00, 0.06, 'row'), {borderWidth: 2,}]}>
-            {/* BOTTOM CONTAINER */}
-            </View>
-        </View>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
+          {Object.entries(scores).map(([key, value]) => (
+            <Pressable key={key}
+            onPress={() => router.replace({
+              pathname: '/game-details', 
+              params: {gameInfo: JSON.stringify(value)}
+            })}
+            style={({ pressed }) => [
+              activeGameCard(1.00, 0.20, 'column'),
+              {
+                borderTopWidth: 1, 
+                borderBottomWidth: 1, 
+                borderTopColor: '#D2D1D1', 
+                borderBottomColor: '#D2D1D1',
+                opacity: pressed ? 0.7 : 1,  // Visual feedback when pressed
+              }
+            ]}
+          >
+
+              {/* MAIN GAME CARD CONTAINER */}
+                          <View style={[activeGameCard(1.00, 0.10, 'row'), {justifyContent: 'center',}]}>
+                          {/* UPPER CONTAINER */}
+                              <View style={[activeGameCard(0.70, 0.10, 'column')]}>
+                              {/* TEAM AND SCORE CONTAINER */}
+                                  <View style={[activeGameCard(0.60, 0.05, 'row'), {justifyContent: 'space-between', padding: 8,}]}>
+                                  {/* TEAM ONE CONTAINER */}
+                                      <View style={[activeGameCard(0.45, 0.05, 'row'), {justifyContent: 'flex-start',}]}>
+                                      {/* TEAM ONE LOGO AND NAME CONTAINER */}
+                                          <Image
+                                            source={teamLogos[value.teamOne.logo]}
+                                            style={[gameCard.teamLogo]}
+                                          />
+                                          <ThemedText
+                                            style={gameCard.teamName}>
+                                            {value.teamOne.name}
+                                          </ThemedText>
+                                      </View>
+                                      <View style={activeGameCard(0.15, 0.05, 'row')}>
+                                      {/* TEAM ONE SCORE CONTAINER */}
+                                        <ThemedText
+                                          style={[gameCard.teamName, {margin: 0}]}>
+                                          {value.teamOne.score}
+                                        </ThemedText>
+                                      </View>
+                                  </View>
+                                  <View style={[activeGameCard(0.60, 0.05, 'row'), {justifyContent: 'space-between', padding: 8,}]}>
+                                  {/* TEAM TWO CONTAINER */}
+                                      <View style={[activeGameCard(0.45, 0.05, 'row'), {justifyContent: 'flex-start',}]}>
+                                      {/* TEAM TWO LOGO AND NAME CONTAINER */}
+                                          <Image
+                                            source={teamLogos[value.teamTwo.logo]}
+                                            style={[gameCard.teamLogo]}
+                                          />
+                                          <ThemedText
+                                            style={gameCard.teamName}>
+                                            {value.teamTwo.name}
+                                          </ThemedText>
+                                      </View>
+                                      <View style={activeGameCard(0.15, 0.05, 'row')}>
+                                      {/* TEAM TWO SCORE CONTAINER */}
+                                        <ThemedText
+                                          style={[gameCard.teamName, {margin: 0}]}>
+                                          {value.teamTwo.score}
+                                        </ThemedText>
+                                      </View>
+                                  </View>
+                              </View>
+                              <View style={[activeGameCard(0.30, 0.10, 'column')]}>
+                              {/* BOTTOM CONTAINER */}
+                                  <View style={[activeGameCard(0.23, 0.03, 'row')]}>
+                                  {/* QUARTER CONTAINER */}
+                                      <ThemedText
+                                        style={gameCard.quarterTime}>
+                                        {value.quarter}
+                                      </ThemedText>
+                                  </View>
+                                  <View style={[activeGameCard(0.23, 0.03, 'row')]}>
+                                  {/* TIME CONTAINER */}
+                                      <ThemedText
+                                        style={gameCard.quarterTime}>
+                                        {value.time}
+                                      </ThemedText>
+                                  </View>
+                              </View>
+                          </View>
+                          <View style={[activeGameCard(1.00, 0.10, 'row'), {padding: 8, justifyContent: 'flex-start', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#3D3D3D', flexWrap: 'wrap',}]}>
+                          {/* BOTTOM CONTAINER */}
+                              <ThemedText
+                                style={gameCard.networkName}>
+                                {value.broadcasts}
+                              </ThemedText>
+                          </View>
+
+
+            </Pressable>
+          ))}
     </ParallaxScrollView>
   );
 }
@@ -178,9 +241,5 @@ const styles = StyleSheet.create({
     bottom: -90,
     left: -35,
     position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
   },
 });
