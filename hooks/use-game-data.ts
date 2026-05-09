@@ -1,4 +1,4 @@
-import { getNBAGames } from '@/services/nba';
+import { getGameData } from '@/services/get-game-data';
 import { gameStore } from '@/store/gamestore';
 import { useEffect, useState } from 'react';
 
@@ -7,7 +7,9 @@ const [nba, setNBA] = useState([null])
 
   useEffect(() => {
     async function fetchData() {
-      const response = await getNBAGames();
+      const response = await getGameData();
+      console.log("RESPONSE BELOW HERE RESPONSE BELOW HERE");
+      console.log(response);
       const games = gameStore(response)
       setNBA(games)
       }
@@ -15,19 +17,3 @@ const [nba, setNBA] = useState([null])
     }, []);
   return nba;
 };
-
-
-// let response = getNBAGames();
-// let nba;
-// //const [nba, setNBA] = useState(null)
-
-//   useEffect(() => {
-//     async function fetchData() {
-//       const response = await getNBAGames();
-//       nba = gameStore(response)
-//       //setNBA(games)
-//     }
-//     fetchData();
-//     }, []);
-//   return nba;
-// };

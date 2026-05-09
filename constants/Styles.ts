@@ -176,3 +176,18 @@ export const activeGameCard = (
   flexDirection,
 });
 
+export const splash = StyleSheet.create({
+  noTouch: {
+    pointerEvents: 'none'
+  },
+  splashContainer: {
+    height: Layout.window.height * 0.99,
+    width: Layout.window.width * 0.99,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    height: 220,
+    width: 260,
+  },
+});
