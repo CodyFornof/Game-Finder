@@ -1,16 +1,26 @@
 // This page defines dark/light theme, defines the main screen, and adjusts the status bar that has the time, battery, and signal
-import { Tabs } from 'expo-router';
-import React from 'react';
-
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
+import { AppContext, useAppData } from '@/context/AppContext';
+import { useLeagues } from '@/hooks/use-active-leagues';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useGameData } from '@/hooks/use-game-data';
+import { Tabs } from 'expo-router';
+import React from 'react';
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+  const appData = useAppData();
+  console.log('RAW appData:', appData); // does this ever log null?
+
+  const games = useGameData()
+  const leagues = useLeagues(games);
+
   return (
+    <AppContext.Provider value={{games, leagues}}>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -32,5 +42,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </AppContext.Provider>
   );
 }
