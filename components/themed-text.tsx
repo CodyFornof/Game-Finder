@@ -1,6 +1,6 @@
-import { StyleSheet, Text, type TextProps } from 'react-native';
-
+// This file configures the >ThemedText component - used also for light/dark mode, so that we don't have withe text on withe background or black text over a black background
 import { useThemeColor } from '@/hooks/use-theme-color';
+import { StyleSheet, Text, type TextProps } from 'react-native';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;

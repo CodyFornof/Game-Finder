@@ -8,7 +8,7 @@ const screenLogo: Record<string, ImageSourcePropType> = {
 };
 
 export default function splashScreen() {
-
+ // Great splash screen : )
   return (
     <View style={splash.noTouch}>
       <ThemedView style={splash.splashContainer}>

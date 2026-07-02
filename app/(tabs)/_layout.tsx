@@ -14,12 +14,13 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   const appData = useAppData();
-  console.log('RAW appData:', appData); // does this ever log null?
 
   const games = useGameData()
   const leagues = useLeagues(games);
 
   return (
+    //AppContext allows us to move variable values from screen to screen
+    //These tabs are not currently used as no additional screens are needed but good to keep for future updates
     <AppContext.Provider value={{games, leagues}}>
     <Tabs
       screenOptions={{

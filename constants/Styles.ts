@@ -30,10 +30,8 @@ export const Layout = {
 
 export const headerStyles = StyleSheet.create({
   topHeaderContainer: {
-    height: Layout.window.height * 0.08,  // 15% of screen height
-    //justifyContent: 'center',
+    height: Layout.window.height * 0.08,  
     alignItems: 'center',
-    //width: Layout.window.width,
     borderBottomWidth: 2,
     borderBottomColor: '#BCBCBC'
   },
@@ -57,7 +55,6 @@ export const headerStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Arial',
     fontSize: 24,
-    //color: '#000',
   },
   titleContainer: {
     flexDirection: 'row',
@@ -81,6 +78,10 @@ export const headerStyles = StyleSheet.create({
     backgroundColor: '#22c55e',
     borderRadius: 2,
   },
+    appLogo: {
+    height: 60,
+    width: 60,
+  },
   leaguePressable: { // OUT OF USE, NEED TO IMPLEMENT THIS INTO CODE
     borderTopWidth: 1, 
     borderBottomWidth: 1, 
@@ -101,7 +102,7 @@ export const gameCard = StyleSheet.create({
     height: 28,
   },
   teamName: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     margin: 8,
     fontFamily: 'Arial',
@@ -113,7 +114,7 @@ export const gameCard = StyleSheet.create({
     textAlign: 'right',
   },
   networkName: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     fontFamily: 'Arial',
     color: '#0EAD00',
@@ -128,7 +129,6 @@ export const gameDetails = StyleSheet.create({
     flex: 1,
   },
   gameDetails: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 30,
     flexDirection: 'column',
   },
@@ -142,10 +142,10 @@ export const gameDetails = StyleSheet.create({
   },
   teamScore: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: 600,
     margin: 8,
+    textAlign: 'center',
     fontFamily: 'Arial',
-    color: '#000',
   },
   networksScrollView: {
     width: Layout.window.width * 0.80,

@@ -2,18 +2,25 @@ import { getGameData } from '@/services/get-game-data';
 import { gameStore } from '@/store/gamestore';
 import { useEffect, useState } from 'react';
 
+//Organizes the game data into their own arrays by league
 export function useGameData() {
-const [nba, setNBA] = useState([null])
+const [games, setgames] = useState<Record<string, any[]>>({
+  nba: [],
+  nfl: [],
+  mlb: [],
+});
+
 
   useEffect(() => {
     async function fetchData() {
+      //Gets the data from api and puts it in response
       const response = await getGameData();
-      console.log("RESPONSE BELOW HERE RESPONSE BELOW HERE");
-      console.log(response);
+      // Organizes the response into the format we need the data
       const games = gameStore(response)
-      setNBA(games)
+      //Adds the data to the object of arrays above for each league
+      setgames(games)
       }
     fetchData();
     }, []);
-  return nba;
+  return games;
 };

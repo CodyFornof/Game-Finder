@@ -1,5 +1,5 @@
+//This file configures the ThemedView component that makes the background of the View the same color needed for dark/light mode
 import { View, type ViewProps } from 'react-native';
-
 import { useThemeColor } from '@/hooks/use-theme-color';
 
 export type ThemedViewProps = ViewProps & {

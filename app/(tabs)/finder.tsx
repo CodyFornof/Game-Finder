@@ -4,119 +4,19 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { activeGameCard, gameCard, headerStyles } from '@/constants/Styles';
-import { TextStyles } from '@/constants/theme';
 import { useAppData } from '@/context/AppContext';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Image, ImageSourcePropType, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-//import { gameStore} from '@/store/gamestore'
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 export default function FinderScreen() {
+//Used to open Game Details screen
 const router = useRouter();
-
-// const leagues = ["NBA", "MLB", "NFL", "NHL", "MLS", "AHL"];
-
-const teamLogos: Record<string, ImageSourcePropType> = {
-  Nuggets: require("@/assets/Logo/Denver_Nuggets.png"),
-  Pacers: require("@/assets/Logo/Indiana_Pacers.png"),
-};
-
-const gameSlate: { [key: string]: any } = {  
-  NBA: {
-    game1: {
-      quarter: "Final",
-      time: "",
-      broadcasts: "NBA League Pass, NBCSB, YES, NBA TV Canada",
-      teamOne: {
-        logo: "Nuggets",
-        name: "Saint Louis",
-        score: "72",
-      },
-      teamTwo: {
-        logo: "Pacers",
-        name: "Michigan",
-        score: "95",
-      }
-    },
-    game2: {
-      quarter: "H1",
-      time: "12:17",
-      broadcasts: "NBA League Pass, NBCSB, YES, NBA TV Canada",
-      teamOne: {
-        logo: "Nuggets",
-        name: "Louisville",
-        score: "12",
-      },
-      teamTwo: {
-        logo: "Pacers",
-        name: "MI State",
-        score: "19",
-      }
-    },
-    game3: {
-      quarter: "Today",
-      time: "2:15PM",
-      broadcasts: "NBA League Pass, NBCSB, YES, NBA TV Canada",
-      teamOne: {
-        logo: "Nuggets",
-        name: "TCU",
-        score: "",
-      },
-      teamTwo: {
-        logo: "Pacers",
-        name: "Duke",
-        score: "",
-      }
-    },
-    game4: {
-      quarter: "Today",
-      time: "3:10PM",
-      broadcasts: "NBA League Pass, NBCSB, YES, NBA TV Canada",
-      teamOne: {
-        logo: "Nuggets",
-        name: "Texas A&M",
-        score: "",
-      },
-      teamTwo: {
-        logo: "Pacers",
-        name: "Houston",
-        score: "",
-      }
-    },
-  },
-  MLB: {
-    game1: {
-      quarter: "Final",
-      time: "",
-      broadcasts: "MLB Network, Dodgers Sportsnet, Anaheim Sportsnet",
-      teamOne: {
-        logo: "Nuggets",
-        name: "Dodgers",
-        score: "1",
-      },
-      teamTwo: {
-        logo: "Pacers",
-        name: "Angels",
-        score: "3",
-      },
-    },
-  },
-};
-
-const [currentLeague, setLeague] = useState('nba')
-const {games, leagues} = useAppData();
-// console.log(`GAMES: ${JSON.stringify(games)}`)
-
-const [currentGameDetails, setGameDetails] = useState(games[currentLeague]);
-
- useEffect(() => {
-   setGameDetails(games[currentLeague])
-   console.log(games[currentLeague])
-}, [currentLeague])
-
-console.log(`Current Game Details: ${JSON.stringify(currentGameDetails)}`)
+// Gets the loaded Games and leagues for the league bar and game scroll view - Gets this data from the Splash screen
+const {games, leagues, currentLeague, setLeague} = useAppData();
+const currentGameDetails = games[currentLeague];
 
   return (
+    //Must be the parent view so the parallax Scroll View is the entire screen with the parameter of the logo (headerImage) and fixedHeader(League bar)
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
       headerImage={
@@ -126,16 +26,16 @@ console.log(`Current Game Details: ${JSON.stringify(currentGameDetails)}`)
           name="chevron.left.forwardslash.chevron.right"
           style={styles.headerImage}
         />
-      }
+      } // fixedHeader is so we can add code that sticks to the top, not apart of the scroll. Specifically here, we have the bar that shows the leagues of games today. 
       fixedHeader={
         <ThemedView style={headerStyles.leagueContainer}>
-           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={headerStyles.leagueScroll}>
+           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={headerStyles.leagueScroll}> 
           {leagues.map((league: any) => (
             <Pressable key={league}
             onPress={() => setLeague(league.toLowerCase())}
           >
             <View key={league} style={headerStyles.leagueButton}>
-            <ThemedText style={[headerStyles.leagueText, league === currentLeague && headerStyles.leagueTextActive]}>
+            <ThemedText style={[headerStyles.leagueText, league.toLowerCase() === currentLeague && headerStyles.leagueTextActive]}>
               {league}
             </ThemedText>
           </View>
@@ -144,19 +44,12 @@ console.log(`Current Game Details: ${JSON.stringify(currentGameDetails)}`)
           </ScrollView>
         </ThemedView>
       }>
-      <ThemedView style={headerStyles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={TextStyles.day}>
-          Today
-        </ThemedText>
-      </ThemedView>
-          {currentGameDetails.map((item: any) => (
+          {currentGameDetails?.map((item: any) => ( //We map each gabelow with gameData
   Object.entries(item).map(([gameKey, gameData]: [string, any]) => (
-    <Pressable key={gameKey}
-      onPress={() => router.replace({
+    <Pressable key={gameKey} // it runs before set state sets it to currently be nba, and it tries the abbreviations
+      onPress={() => router.push({ // Each game can be pressed and that games data is sent to game Details - Params sends those variables
         pathname: '/game-details',
-        params: {gameInfo: JSON.stringify(gameData), gameLeague: currentLeague}
+        params: {gameInfo: JSON.stringify(gameData), gameLeague: currentLeague, gameBroadcast: JSON.stringify(gameData.broadcast)}
       })}
       style={({ pressed }) => [
         activeGameCard(1.00, 0.20, 'column'),
@@ -171,11 +64,11 @@ console.log(`Current Game Details: ${JSON.stringify(currentGameDetails)}`)
       {/* MAIN GAME CARD CONTAINER */}
       <View style={[activeGameCard(1.00, 0.10, 'row'), {justifyContent: 'center',}]}>
       {/* UPPER CONTAINER */}
-          <View style={[activeGameCard(0.70, 0.10, 'column')]}>
+          <View style={[activeGameCard(0.74, 0.10, 'column')]}>
           {/* TEAM AND SCORE CONTAINER */}
               <View style={[activeGameCard(0.60, 0.05, 'row'), {justifyContent: 'space-between', padding: 8,}]}>
               {/* TEAM ONE CONTAINER */}
-                  <View style={[activeGameCard(0.45, 0.05, 'row'), {justifyContent: 'flex-start',}]}>
+                  <View style={[activeGameCard(0.55, 0.05, 'row'), {justifyContent: 'flex-start',}]}>
                   {/* TEAM ONE LOGO AND NAME CONTAINER */}
                       <Image
                         source={{uri: `https://a.espncdn.com/i/teamlogos/${currentLeague}/500/${gameData.teamOneAbr}.png`}}
@@ -186,7 +79,7 @@ console.log(`Current Game Details: ${JSON.stringify(currentGameDetails)}`)
                         {gameData.teamOneName}
                       </ThemedText>
                   </View>
-                  <View style={activeGameCard(0.15, 0.05, 'row')}>
+                  <View style={activeGameCard(0.07, 0.05, 'row')}>
                   {/* TEAM ONE SCORE CONTAINER */}
                     <ThemedText
                       style={[gameCard.teamName, {margin: 0}]}>
@@ -196,7 +89,7 @@ console.log(`Current Game Details: ${JSON.stringify(currentGameDetails)}`)
               </View>
               <View style={[activeGameCard(0.60, 0.05, 'row'), {justifyContent: 'space-between', padding: 8,}]}>
               {/* TEAM TWO CONTAINER */}
-                  <View style={[activeGameCard(0.45, 0.05, 'row'), {justifyContent: 'flex-start',}]}>
+                  <View style={[activeGameCard(0.55, 0.05, 'row'), {justifyContent: 'flex-start',}]}>
                   {/* TEAM TWO LOGO AND NAME CONTAINER */}
                       <Image
                         source={{uri: `https://a.espncdn.com/i/teamlogos/${currentLeague}/500/${gameData.teamTwoAbr}.png`}}
@@ -207,7 +100,7 @@ console.log(`Current Game Details: ${JSON.stringify(currentGameDetails)}`)
                         {gameData.teamTwoName}
                       </ThemedText>
                   </View>
-                  <View style={activeGameCard(0.15, 0.05, 'row')}>
+                  <View style={activeGameCard(0.07, 0.05, 'row')}>
                   {/* TEAM TWO SCORE CONTAINER */}
                     <ThemedText
                       style={[gameCard.teamName, {margin: 0}]}>
@@ -238,7 +131,7 @@ console.log(`Current Game Details: ${JSON.stringify(currentGameDetails)}`)
       {/* BOTTOM CONTAINER */}
           <ThemedText
             style={gameCard.networkName}>
-            {gameData.broadcasts}
+            {gameData.broadcast}
           </ThemedText>
       </View>
     </Pressable>
