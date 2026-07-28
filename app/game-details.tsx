@@ -1,32 +1,49 @@
 // This is your explore tab
+import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { activeGameCard, gameDetails, headerStyles } from '@/constants/Styles';
+import { activeGameCard, gameCard, gameDetails, headerStyles } from '@/constants/Styles';
+import { Ionicons } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 
+import { useColorScheme } from 'react-native';
+
 export default function FinderScreen() {
+const colorScheme = useColorScheme();
 const router = useRouter();
 
-const { gameInfo } = useLocalSearchParams();
+// Get the game Data from the home screen for the specific game that was pressed
+const { gameInfo, gameLeague } = useLocalSearchParams();
 const gameInfoObj = JSON.parse(Array.isArray(gameInfo) ? gameInfo[0] : gameInfo);
+const gameBroadcast = gameInfoObj?.broadcast ?? null;
 
+console.log("gameInfoObj:", gameInfoObj);
+
+if (!gameInfoObj) {
+  return ( // Just displays loading if there is no gameInfoObj loaded - Good for the half second where the variable isn't loaded yet - prevents crash
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Loading...</Text>
+    </View>
+  );
+}
   return (
       <ThemedView style={gameDetails.gameDetailContainer}>
         <Stack.Screen options={{ headerShown: false }} />
-        <View style={[activeGameCard(0.80, 0.60, 'column'), gameDetails.gameDetails, {justifyContent: 'flex-start',}]}>
+        <ThemedView style={[activeGameCard(0.80, 0.60, 'column'), gameDetails.gameDetails, {justifyContent: 'flex-start',}]}>
         {/* MAIN GAME CARD CONTAINER */}
-            <View style={[activeGameCard(0.80, 0.08, 'row'), { borderRadius: 30,}]}>
+            <ThemedView style={[activeGameCard(0.80, 0.12, 'row'), { borderRadius: 30,}]}>
             {/* TOP LEAGUE CONTAINER */}
-              <View style={[activeGameCard(0.20, 0.08, 'row'), { alignItems: 'center',}]}>
+              <ThemedView style={[activeGameCard(0.20, 0.10, 'row'), { alignItems: 'center',}]}>
               {/*  LEAGUE NAME CONTAINER */}
-                  <Text style={[headerStyles.leagueText, {fontSize: 30,}]}>
-                    {gameInfoObj.teamOne.name}
-                  </Text>
-              </View>
+                  <ThemedText style={[headerStyles.leagueText, {fontSize: 30, lineHeight: 36}]}>
+                    {(gameLeague as string).toUpperCase()}
+                  </ThemedText>
+              </ThemedView>
               {/* <View style={[activeGameCard(0.15, 0.08, 'row'), {backgroundColor: 'red', alignItems: 'flex-end', position: 'absolute', right: 0}]}> */}
               {/*  X BUTTON CONTAINER */}
                   <Pressable 
-                    onPress={() => router.replace('/finder')}
+                    onPress={() => router.back()}
+                    //onPress={() => router.replace('/finder')}
                     style={({ pressed }) => [
                       activeGameCard(0.15, 0.08, 'row'),
                       {
@@ -34,72 +51,61 @@ const gameInfoObj = JSON.parse(Array.isArray(gameInfo) ? gameInfo[0] : gameInfo)
                         opacity: pressed ? 0.7 : 1,  // Visual feedback when pressed
                       }
                     ]}>
-                    <Image
-                      source={require('@/components/ui/exit_button.png')}
-                      style={[gameDetails.exitButton]}
-                    />
+                    <Ionicons
+                      name="close"
+                      size={30}
+                      color={colorScheme === 'dark' ? '#fff' : '#000'}
+                      style={gameDetails.exitButton}
+                      />
                   </Pressable>
-            </View>
-            <View style={[activeGameCard(0.80, 0.16, 'row'), {justifyContent: 'center',}]}>
+            </ThemedView>
+            <ThemedView style={[activeGameCard(0.80, 0.16, 'row'), {justifyContent: 'center',}]}>
             {/* MIDDLE SCORE CONTAINER */}
-                <View style={activeGameCard(0.20, 0.16, 'column')}>
+                <ThemedView style={activeGameCard(0.20, 0.16, 'column')}>
                 {/* TEAM 1 SCORE CONTAINER */}
                     <Image
-                      source={require('@/assets/Logo/Denver_Nuggets.png')}
+                      source={{uri: `https://a.espncdn.com/i/teamlogos/${gameLeague}/500/${gameInfoObj.teamOneAbr}.png`}}
                       style={[gameDetails.teamLogo]}
                     />
-                    <Text style={gameDetails.teamScore}>
-                      {gameInfoObj.teamOne.score}
-                    </Text>
-                </View>
-                <View style={[activeGameCard(0.20, 0.16, 'column'), {justifyContent: 'flex-start',}]}>
+                    <ThemedText style={gameDetails.teamScore}>
+                      {gameInfoObj.teamOneScore}
+                    </ThemedText>
+                </ThemedView>
+                <ThemedView style={[activeGameCard(0.20, 0.16, 'column'), {justifyContent: 'flex-start',}]}>
                 {/* MIDDLE SCORE CONTAINER */}
-                    <Text style={gameDetails.teamScore}>
+                    <ThemedText style={gameDetails.teamScore}>
                       {gameInfoObj.quarter}
-                    </Text>
-                    <Text style={gameDetails.teamScore}>
+                    </ThemedText>
+                    <ThemedText style={gameDetails.teamScore}>
                       {gameInfoObj.time}
-                    </Text>
-                </View> 
-                <View style={activeGameCard(0.20, 0.16, 'column')}>
+                    </ThemedText>
+                </ThemedView> 
+                <ThemedView style={activeGameCard(0.20, 0.16, 'column')}>
                 {/* TEAM 2 SCORE CONTAINER */}
                     <Image
-                      source={require('@/assets/Logo/Indiana_Pacers.png')}
+                      source={{uri: `https://a.espncdn.com/i/teamlogos/${gameLeague}/500/${gameInfoObj.teamTwoAbr}.png`}}
                       style={[gameDetails.teamLogo]}
                     />
-                    <Text style={gameDetails.teamScore}>
-                      {gameInfoObj.teamTwo.score}
-                    </Text>
-                </View>     
-            </View>
+                    <ThemedText style={gameDetails.teamScore}>
+                      {gameInfoObj.teamTwoScore}
+                    </ThemedText>
+                </ThemedView>     
+            </ThemedView>
             <ScrollView 
               style={gameDetails.networksScrollView}  // Remove alignItems and justifyContent from here
               contentContainerStyle={{  // Add them here instead
                 alignItems: 'flex-start',
                 justifyContent: 'center',
               }}>
-              <View style={gameDetails.networkContainer}>
-                  <Text style={gameDetails.teamScore}>
-                    NBA League Pass
-                  </Text>
-              </View>
-              <View style={gameDetails.networkContainer}>
-                  <Text style={gameDetails.teamScore}>
-                    NBCSB
-                  </Text>
-              </View>
-              <View style={gameDetails.networkContainer}>
-                  <Text style={gameDetails.teamScore}>
-                    YES
-                  </Text>
-              </View>
-              <View style={gameDetails.networkContainer}>
-                  <Text style={gameDetails.teamScore}>
-                    NBA TV Canada
-                  </Text>
-              </View>
+                {gameBroadcast && gameBroadcast.split(',').map((network: any) => (
+                  <ThemedView style={gameDetails.networkContainer}>
+                    <Text style={gameCard.networkName}>
+                      {network.trim()}
+                    </Text>
+                  </ThemedView>
+                ))}
             </ScrollView>
-        </View>
+        </ThemedView>
       </ThemedView>
   );
 }
