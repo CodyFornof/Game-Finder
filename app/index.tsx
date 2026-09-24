@@ -1,11 +1,12 @@
 import { AppContext } from '@/context/AppContext';
 import { useLeagues } from '@/hooks/use-active-leagues';
 import { useGameData } from '@/hooks/use-game-data';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { ImageSourcePropType } from 'react-native';
-import { NativeRouter, Navigate, Route, Routes } from "react-router-native";
+//import { NativeRouter, Navigate, Route, Routes } from "react-router-native";
 import FinderScreen from './(tabs)/finder';
 import splashScreen from './splash';
+import { useRouter, Redirect } from 'expo-router';
 
 const screenLogo: Record<string, ImageSourcePropType> = {
   logo: require("@/assets/Logo/gpt_trans_logo.png"),
@@ -13,15 +14,9 @@ const screenLogo: Record<string, ImageSourcePropType> = {
 
 export default function HomeScreen() {
 
-  const [isLoading, setIsLoading] = useState(true)
+const { games, leagues } = useContext(AppContext);
 
-  // Gets the formatted data
-const games = useGameData();
-// Gets the leagues from the games
-const leagues = useLeagues(games);
-// Gets the first league so the app knows which league to open up to first
-const firstLeague = leagues[0]
-const [currentLeague, setLeague] = useState(firstLeague?.toLowerCase() ?? 'mlb')
+const [isLoading, setIsLoading] = useState(true)
 
 const renderCount = useRef(0);
 renderCount.current++;
@@ -36,14 +31,5 @@ useEffect(() => {
 // Has splash screen open for as long as waiting to load
 if(isLoading) return splashScreen()
 
-  return ( 
-    <AppContext.Provider value={{games, leagues, currentLeague, setLeague}}>
-    <NativeRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/tabs" replace />} />
-        <Route path="/tabs/*" element={<FinderScreen />} />
-      </Routes>
-    </NativeRouter>
-    </AppContext.Provider>
-  );
+  return <Redirect href="/finder" />;
 }

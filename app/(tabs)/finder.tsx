@@ -13,6 +13,9 @@ export default function FinderScreen() {
 const router = useRouter();
 // Gets the loaded Games and leagues for the league bar and game scroll view - Gets this data from the Splash screen
 const {games, leagues, currentLeague, setLeague} = useAppData();
+console.log(leagues)
+console.log(games);
+console.log("current league: ", currentLeague);
 const currentGameDetails = games[currentLeague];
 
   return (
@@ -32,7 +35,10 @@ const currentGameDetails = games[currentLeague];
            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={headerStyles.leagueScroll}> 
           {leagues.map((league: any) => (
             <Pressable key={league}
-            onPress={() => setLeague(league.toLowerCase())}
+            onPress={() => {
+              console.log(league.toLowerCase());
+              setLeague(league.toLowerCase());
+            }}
           >
             <View key={league} style={headerStyles.leagueButton}>
             <ThemedText style={[headerStyles.leagueText, league.toLowerCase() === currentLeague && headerStyles.leagueTextActive]}>

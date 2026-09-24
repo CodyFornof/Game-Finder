@@ -49,6 +49,7 @@ There is minimum security currently as there are no user authentication, account
 
 
 10. Future Improvements
+Fix the NFL time datapoints
 Make the container holding the network names dynamic based on the wrap of the text)
 Add an animation that the underline of the league name moves smoothly
 Add a scroll up and it refreshes
