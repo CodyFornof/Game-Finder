@@ -1,0 +1,22 @@
+[
+  {
+    "id": "001",
+    "name": "NFL Sunday Ticket"
+  },
+  {
+    "id": "002",
+    "name": "NBA League Pass"
+  },
+  {
+    "id": "003",
+    "name": "MLB.TV"
+  },
+  {
+    "id": "004",
+    "name": "MLS Season Pass"
+  },
+  {
+    "id": "005",
+    "name": "WNBA League Pass"
+  }
+]

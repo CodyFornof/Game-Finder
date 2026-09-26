@@ -1,0 +1,58 @@
+[
+  {
+    "id": "001",
+    "name": "ESPN+"
+  },
+  {
+    "id": "002",
+    "name": "ESPN Select"
+  },
+  {
+    "id": "003",
+    "name": "ESPN Unlimited"
+  },
+  {
+    "id": "004",
+    "name": "Peacock"
+  },
+  {
+    "id": "005",
+    "name": "Prime Video"
+  },
+  {
+    "id": "006",
+    "name": "Paramount+"
+  },
+  {
+    "id": "007",
+    "name": "Hulu + Live TV"
+  },
+  {
+    "id": "008",
+    "name": "Apple TV"
+  },
+  {
+    "id": "009",
+    "name": "FOX One"
+  },
+  {
+    "id": "010",
+    "name": "Netflix"
+  },
+  {
+    "id": "011",
+    "name": "Tubi"
+  },
+  {
+    "id": "012",
+    "name": "Max"
+  },
+  {
+    "id": "013",
+    "name": "DAZN"
+  },
+  {
+    "id": "014",
+    "name": "NFL+"
+  }
+]

@@ -122,6 +122,32 @@ export const gameCard = StyleSheet.create({
   },
 });
 
+export const broadcastStyles = StyleSheet.create({
+  title: {
+    margin: 16,
+    fontWeight: 'bold',
+    fontSize: 24,
+    fontFamily: 'Arial',
+  },
+  channelText: {
+    margin: 8,
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'Arial',
+  },
+  channelRow: {
+    flexDirection: 'row',
+    margin: 1,
+  },
+  checkbox: {
+    height: 20,
+    width: 20,
+    margin: 8,
+    marginLeft: 16, 
+  },
+});
+
 export const gameDetails = StyleSheet.create({
   gameDetailContainer: {
     justifyContent: 'center',
