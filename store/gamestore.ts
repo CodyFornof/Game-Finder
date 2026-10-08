@@ -31,7 +31,13 @@ export function gameStore(data: Record<string, any> = {}) {
     }
     // NBA conditional data mappings
     if(sport == 'nba' || sport == 'nfl'){
-      const time = new Date(game['datetime'])
+      //create time
+      let time
+      // NBA uses datetime, NFL uses date
+      if(sport=='nba'){time = new Date(game['datetime'])}
+      // for NFL, but uses else so that time is never undefined
+      else{time = new Date(game['date'])}
+
       const estString = time.toLocaleString("en-US", {
         timeZone: "America/New_York",
         hour: 'numeric',
@@ -46,7 +52,7 @@ export function gameStore(data: Record<string, any> = {}) {
         if(sport == 'nfl'){
           gameData.status = game['status_state'];
           if(gameData.status == 'scheduled'){
-            gameData.time = game['status']
+            gameData.time = estString;
           };
         }
         // Get game time it starts, or get game score

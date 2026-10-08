@@ -8,9 +8,11 @@ import channels from '@/data/channels.json';
 import streamingServices from '@/data/streaming-services.json';
 import addOns from '@/data/add-ons.json';
 import providers from '@/data/providers.json';
-import { activeGameCard, gameCard, headerStyles, broadcastStyles } from '@/constants/Styles';
+import { broadcastStyles } from '@/constants/Styles';
 import { useAppData } from '@/context/AppContext';
 import { useRouter } from 'expo-router';
+import { ChannelRow, ProviderRow, StreamingRow, AddOnRow } from '@/components/channel-rows';
+import { useSelectionStore } from '@/data/channel-selection-store'
 import { Image, Pressable, ScrollView, StyleSheet, View, Text } from 'react-native';
 
 export default function FinderScreen() {
@@ -36,32 +38,20 @@ const currentGameDetails = games[currentLeague];
       <ThemedView>
         <ThemedText style={broadcastStyles.title}>Streaming Services</ThemedText>
         {streamingServices?.map((item: any) => (
-          <ThemedView key={item.id} style={broadcastStyles.channelRow}>
-            <Checkbox style={broadcastStyles.checkbox}/>
-            <ThemedText style={broadcastStyles.channelText}>{item.name}</ThemedText>
-          </ThemedView>
+          <StreamingRow key={item.id} id={item.id} name={item.name}/>
       ))}
       <ThemedText style={broadcastStyles.title}>Add-Ons</ThemedText>
         {addOns?.map((item: any) => (
-          <ThemedView key={item.id} style={broadcastStyles.channelRow}>
-            <Checkbox style={broadcastStyles.checkbox}/>
-            <ThemedText style={broadcastStyles.channelText}>{item.name}</ThemedText>
-          </ThemedView>
+          <AddOnRow key={item.id} id={item.id} name={item.name}/>
       ))}
       </ThemedView>
       <ThemedText style={broadcastStyles.title}>TV Providers</ThemedText>
         {providers?.map((item: any) => (
-          <ThemedView key={item.id} style={broadcastStyles.channelRow}>
-            <Checkbox style={broadcastStyles.checkbox}/>
-            <ThemedText style={broadcastStyles.channelText}>{item.name}</ThemedText>
-          </ThemedView>
+          <ProviderRow key={item.id} providerId={item.id}/>
       ))}
       <ThemedText style={broadcastStyles.title}>Channels</ThemedText>
         {channels?.map((item: any) => (
-          <ThemedView key={item.id} style={broadcastStyles.channelRow}>
-            <Checkbox style={broadcastStyles.checkbox}/>
-            <ThemedText style={broadcastStyles.channelText}>{item.name}</ThemedText>
-          </ThemedView>
+          <ChannelRow key={item.id} channelId={item.id}/>
       ))}
     </ParallaxScrollView>
   );
