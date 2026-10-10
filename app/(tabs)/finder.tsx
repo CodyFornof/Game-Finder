@@ -6,9 +6,16 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { activeGameCard, gameCard, headerStyles } from '@/constants/Styles';
 import { useAppData } from '@/context/AppContext';
 import { useRouter } from 'expo-router';
+import { useMemo } from 'react';
+import streamingServices from '@/data/streaming-services.json';
+import addOns from '@/data/add-ons.json';
+import { useSelectionStore } from '@/data/channel-selection-store';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import BroadcastText from '@/components/broadcast-text';
+import useSelectedNames from '@/hooks/use-selected-names'
 
 export default function FinderScreen() {
+const selectedNames = useSelectedNames(streamingServices, addOns);
 //Used to open Game Details screen
 const router = useRouter();
 // Gets the loaded Games and leagues for the league bar and game scroll view - Gets this data from the Splash screen
@@ -135,10 +142,7 @@ const currentGameDetails = games[currentLeague];
       </View>
       <View style={[activeGameCard(1.00, 0.10, 'row'), {padding: 8, justifyContent: 'flex-start', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#3D3D3D', flexWrap: 'wrap',}]}>
       {/* BOTTOM CONTAINER */}
-          <ThemedText
-            style={gameCard.networkName}>
-            {gameData.broadcast}
-          </ThemedText>
+          <BroadcastText text={gameData.broadcast} selectedNames={selectedNames}/>
       </View>
     </Pressable>
   ))

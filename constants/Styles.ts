@@ -117,7 +117,13 @@ export const gameCard = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     fontFamily: 'Arial',
+    alignSelf: 'center',
+  },
+  networkNameSelected: {
+    fontSize: 24,
+    fontWeight: 'bold',
     color: '#0EAD00',
+    fontFamily: 'Arial',
     alignSelf: 'center',
   },
 });
