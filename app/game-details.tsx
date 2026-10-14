@@ -15,7 +15,8 @@ const router = useRouter();
 // Get the game Data from the home screen for the specific game that was pressed
 const { gameInfo, gameLeague } = useLocalSearchParams();
 const gameInfoObj = JSON.parse(Array.isArray(gameInfo) ? gameInfo[0] : gameInfo);
-const gameBroadcast = gameInfoObj?.broadcast ?? null;
+const gameBroadcast: string | null | undefined = gameInfoObj?.broadcast ?? null;
+
 
 console.log("gameInfoObj:", gameInfoObj);
 
@@ -97,13 +98,19 @@ if (!gameInfoObj) {
                 alignItems: 'flex-start',
                 justifyContent: 'center',
               }}>
-                {gameBroadcast && gameBroadcast.split(',').map((network: any) => (
-                  <ThemedView style={gameDetails.networkContainer}>
-                    <Text style={gameCard.networkName}>
-                      {network.trim()}
-                    </Text>
-                  </ThemedView>
-                ))}
+                {gameBroadcast &&
+                  Array.from(
+                    new Set<string>(
+                      gameBroadcast
+                        .split(',')
+                        .map((n: string) => n.trim())
+                        .filter(Boolean)
+                    )
+                  ).map((name: string) => (
+                    <ThemedView key={name} style={gameDetails.networkContainer}>
+                      <ThemedText style={gameCard.networkName}>{name}</ThemedText>
+                    </ThemedView>
+                  ))}
             </ScrollView>
         </ThemedView>
       </ThemedView>

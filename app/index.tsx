@@ -6,6 +6,7 @@ import { ImageSourcePropType } from 'react-native';
 //import { NativeRouter, Navigate, Route, Routes } from "react-router-native";
 import FinderScreen from './(tabs)/finder';
 import splashScreen from './splash';
+import { useSelectionsHydrated } from '@/hooks/use-selections-hydrated';
 import { useRouter, Redirect } from 'expo-router';
 
 const screenLogo: Record<string, ImageSourcePropType> = {
@@ -15,18 +16,12 @@ const screenLogo: Record<string, ImageSourcePropType> = {
 export default function HomeScreen() {
 
 const { games, leagues } = useContext(AppContext);
-
-const [isLoading, setIsLoading] = useState(true)
+const selectionsLoaded = useSelectionsHydrated();
 
 const renderCount = useRef(0);
 renderCount.current++;
 
-//When all data is populated we can set to no longer loading - removes splash screen and opens app
-useEffect(() => {
-  if(games && leagues && leagues.length > 0){
-    setIsLoading(false)
-  }
-}, [games, leagues])
+const isLoading = !(games && leagues && leagues.length > 0 && selectionsLoaded);
 
 // Has splash screen open for as long as waiting to load
 if(isLoading) return splashScreen()
